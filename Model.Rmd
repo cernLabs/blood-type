@@ -1,0 +1,20 @@
+---
+title: "Model"
+output:
+  html_document: default
+---
+full model
+$$
+P(\vec{\theta}_i,\vec\pi,\vec{\alpha},\vec\beta | {\bf x}, \vec N) \propto
+\Big(
+\prod_i
+P(\vec x_i|\vec{\theta}_i,N_i)
+P(\vec{\theta}_i|\vec \pi,\beta)
+\Big)
+P(\vec \pi | \vec \alpha)
+P(\alpha)
+P(\beta)
+$$
+
+
+
