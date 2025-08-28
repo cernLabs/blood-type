@@ -15,6 +15,9 @@ P(\vec \pi | \vec \alpha)
 P(\alpha)
 P(\beta)
 $$
+Likelihood
 
-
+$$
+\text{Multinomial}()
+$$
 
