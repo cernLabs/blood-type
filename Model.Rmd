@@ -18,6 +18,7 @@ $$
 Likelihood
 
 $$
-\text{Multinomial}()
+\vec{x_i}\sim \text{Multinomial}(\vec{\theta}_i,N_i)
+
 $$
 
