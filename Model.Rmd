@@ -3,22 +3,33 @@ title: "Model"
 output:
   html_document: default
 ---
-full model
+### full model
 $$
 P(\vec{\theta}_i,\vec\pi,\vec{\alpha},\vec\beta | {\bf x}, \vec N) \propto
 \Big(
 \prod_i
 P(\vec x_i|\vec{\theta}_i,N_i)
-P(\vec{\theta}_i|\vec \pi,\beta)
+P(\vec{\theta}_i|\vec \pi\cdot\beta)
 \Big)
 P(\vec \pi | \vec \alpha)
 P(\alpha)
 P(\beta)
 $$
-Likelihood
-
+### Likelihood
 $$
 \vec{x_i}\sim \text{Multinomial}(\vec{\theta}_i,N_i)
-
 $$
-
+### Prior
+$$
+\vec{\theta_i} \sim \text{Dirichlet}(\vec{\pi}\cdot \beta)
+$$
+### Hyperpriors
+$$
+\vec\pi \sim \text{Dirichlet}(\vec\alpha)
+\\
+\vec\alpha \sim P(\cdot)
+\tiny{\text{  possibly gamma}}
+\\
+\beta \sim P(\cdot) 
+\tiny{\text{  possibly exponential}}
+$$

@@ -353,18 +353,33 @@ display: none;
 </div>
 
 
-<p>full model <span class="math display">\[
+<div id="full-model" class="section level3">
+<h3>full model</h3>
+<p><span class="math display">\[
 P(\vec{\theta}_i,\vec\pi,\vec{\alpha},\vec\beta | {\bf x}, \vec N)
 \propto
 \Big(
 \prod_i
 P(\vec x_i|\vec{\theta}_i,N_i)
-P(\vec{\theta}_i|\vec \pi,\beta)
+P(\vec{\theta}_i|\vec \pi\cdot\beta)
 \Big)
 P(\vec \pi | \vec \alpha)
 P(\alpha)
 P(\beta)
+\]</span> ### Likelihood <span class="math display">\[
+\vec{x_i}\sim \text{Multinomial}(\vec{\theta}_i,N_i)
+\]</span> ### Prior <span class="math display">\[
+\vec{\theta_i} \sim \text{Dirichlet}(\vec{\pi}\cdot \beta)
+\]</span> ### Hyperpriors <span class="math display">\[
+\vec\pi \sim \text{Dirichlet}(\vec\alpha)
+\\
+\vec\alpha \sim P(\cdot)
+\tiny{\text{  possibly gamma}}
+\\
+\beta \sim P(\cdot)
+\tiny{\text{  possibly exponential}}
 \]</span></p>
+</div>
 
 
 
