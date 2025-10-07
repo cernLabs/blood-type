@@ -18,8 +18,8 @@ ui <- fluidPage(
       conditionalPanel(
         condition = "input.bloodTypeView == 'specific'",
         checkboxGroupInput("bloodType", "Select Blood Type(s):",
-                           choices = c("A+", "A-", "B+", "B-", "AB+", "O+", "O-"),
-                           selected = c("A+", "A-", "B+", "B-", "AB+", "O+", "O-"))
+                           choices = c("A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"),
+                           selected = c("A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"))
       ),
       
       conditionalPanel(
@@ -98,3 +98,4 @@ server <- function(input, output) {
 
 # Run the app
 shinyApp(ui = ui, server = server)
+

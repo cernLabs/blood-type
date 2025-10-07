@@ -1,51 +1,75 @@
 setwd("~/Desktop/githubbahubba/blood-type")
 
-###### IS: cleaning column names ######
-##########################################
-source("blood_work_sccript_colname_cleaning.R")
-##########################################
-##########################################
 
-colnames(data)
+# read the data
+blood = read.csv("raw_info.csv", head = T)
+# raw info was extracted directly from the main research article Canizalez-Román
+# , et al. with the assistance of AI chats
 
-# Load cleaned data
-df <- read.csv("blood_types.csv", header = TRUE)
+# create a dataframe without the confidence intervals
+df <- blood %>% select(
+  Region,
+  State,
+  N,
+  A_rh_Percent,
+  A_Percent,
+  B_rh_Percent,
+  B_Percent,
+  AB_rh_Percent,
+  AB_Percent,
+  O_rh_Percent,
+  O_Percent
+)
 
 # Reshape from wide to long format
 df_long <- df %>%
-  select(Region, State, N, 
-         `A..Rh.D..`, `A..Rh.d..`, 
-         `B..Rh.D..`, `B..Rh.d..`, 
-         `AB..Rh.D..`, 
-         `O..Rh.D..`, `O..Rh.d..`) %>%
   pivot_longer(
-    cols = c(`A..Rh.D..`, `A..Rh.d..`, `B..Rh.D..`, `B..Rh.d..`, 
-             `AB..Rh.D..`, `O..Rh.D..`, `O..Rh.d..`),
+    cols = c(  A_rh_Percent,
+               A_Percent,
+               B_rh_Percent,
+               B_Percent,
+               AB_rh_Percent,
+               AB_Percent,
+               O_rh_Percent,
+               O_Percent
+             ),
     names_to = "BloodType",
     values_to = "Percentage"
   ) %>%
   mutate(
     # Calculate actual counts from percentages
     Count = round(Percentage * N / 100),
-    # Clean up blood type names - Rh.D. = positive, Rh.d. = negative
+    # Clean up blood type names - rh = positive, otherwise negative
+    BloodType = gsub("A_rh_Percent", "A+", BloodType),
+    BloodType = gsub("A_Percent", "A-", BloodType),
+    BloodType = gsub("B_rh_Percent", "B+", BloodType),
+    BloodType = gsub("B_Percent", "B-", BloodType),
+    
+    BloodType = gsub("AB_rh_Percent", "AB+", BloodType),
+    BloodType = gsub("AB_Percent", "AB-", BloodType),
+    BloodType = gsub("O_rh_Percent", "O+", BloodType),
+    BloodType = gsub("O_Percent", "O-", BloodType),
+    
+    # Extract base blood type (A, B, AB, O) for aggregation option
+    BaseBloodType = str_replace(BloodType, "[+-]", "")
+  )
+    
+    
+    
+    # Clean up blood type names - rh = positive, otherwise negative
+    
     BloodType = case_when(
-      str_detect(BloodType, "A\\.\\.Rh\\.D\\.") ~ "A+",
-      str_detect(BloodType, "A\\.\\.Rh\\.d\\.") ~ "A-",
-      str_detect(BloodType, "B\\.\\.Rh\\.D\\.") ~ "B+",
-      str_detect(BloodType, "B\\.\\.Rh\\.d\\.") ~ "B-",
-      str_detect(BloodType, "AB\\.\\.Rh\\.D\\.") ~ "AB+",
-      str_detect(BloodType, "O\\.\\.Rh\\.D\\.") ~ "O+",
-      str_detect(BloodType, "O\\.\\.Rh\\.d\\.") ~ "O-",
+      str_detect(BloodType, "A_rh_Percent") ~ "A+",
+      str_detect(BloodType, "A_Percent") ~ "A-",
+      str_detect(BloodType, "B_rh_Percent") ~ "B+",
+      str_detect(BloodType, "B_Percent") ~ "B-",
+      str_detect(BloodType, "AB_rh_Percent") ~ "AB+",
+      str_detect(BloodType, "AB_Percent") ~ "AB-",
+      str_detect(BloodType, "O_rh_Percent") ~ "O+",
+      str_detect(BloodType, "O_Percent") ~ "O-",
       TRUE ~ BloodType
     ),
     # Extract base blood type (A, B, AB, O) for aggregation option
     BaseBloodType = str_replace(BloodType, "[+-]", "")
   )
 
-## make new data set with out the Confidence Interval columns
-df_blood <- data[grep("CI",colnames(data),invert = T)]
-
-## Summon dplyr
-library(dplyr)
-for(i in 4:12){plot((density(df_blood[,i])),main = colnames(df_blood)[i])
-}
