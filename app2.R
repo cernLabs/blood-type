@@ -1,6 +1,9 @@
 library(shiny)
 library(tidyverse)
 
+# Load pie chart data
+df_pie <- df_long
+
 # UI
 ui <- fluidPage(
   titlePanel("Blood Type Proportions Across Mexican States"),
@@ -11,8 +14,8 @@ ui <- fluidPage(
                          selected = unique(df_long$Region)),
       
       radioButtons("bloodTypeView", "Blood Type Display:",
-                   choices = c("Rh specified" = "specific",
-                               "Rh unspecified" = "general"),
+                   choices = c("Specific (A+, A-, B+, etc.)" = "specific",
+                               "General (A, B, AB, O only)" = "general"),
                    selected = "specific"),
       
       conditionalPanel(
@@ -39,10 +42,7 @@ ui <- fluidPage(
     mainPanel(
       fluidRow(
         column(8, plotOutput("bloodPlot", height = "600px")),
-        column(4, conditionalPanel(
-          condition = "input.showPie == true",
-          plotOutput("pieChart", height = "600px")
-        ))
+        column(4, uiOutput("pieChartUI"))
       ),
       tableOutput("summaryTable")
     )
@@ -101,18 +101,25 @@ server <- function(input, output) {
                 .groups = "drop")
   })
   
-  # output$pieChart <- renderPlot({
-  #   data <- filtered_data() %>%
-  #     group_by(BloodType) %>%
-  #     summarise(Total = sum(Count), .groups = "drop")
-  #   
-  #   ggplot(data, aes(x = "", y = Total, fill = BloodType)) +
-  #     geom_bar(stat = "identity", width = 1) +
-  #     coord_polar("y") +
-  #     theme_void() +
-  #     labs(title = "Overall Blood Type Proportions") +
-  #     scale_fill_brewer(palette = "Set2")
-  # })
+  output$pieChartUI <- renderUI({
+    if (!input$showPie) return(NULL)
+    
+    selected_states <- unique(filtered_data()$State)
+    
+    tagList(
+      lapply(selected_states, function(state) {
+        pie_data <- df_pie %>% filter(State == state)
+        if (nrow(pie_data) == 0) return(NULL)
+        
+        renderPlot({
+          slices <- c(pie_data$A, pie_data$B, pie_data$AB, pie_data$O)
+          labels <- c("A", "B", "AB", "O")
+          pie(slices, labels = paste0(labels, ": ", round(slices, 1), "%"),
+              main = paste("Blood Type Distribution in", state))
+        })
+      })
+    )
+  })
 }
 
 # Run the app

@@ -54,22 +54,4 @@ df_long <- df %>%
     BaseBloodType = str_replace(BloodType, "[+-]", "")
   )
     
-    
-    
-    # Clean up blood type names - rh = positive, otherwise negative
-    
-    BloodType = case_when(
-      str_detect(BloodType, "A_rh_Percent") ~ "A+",
-      str_detect(BloodType, "A_Percent") ~ "A-",
-      str_detect(BloodType, "B_rh_Percent") ~ "B+",
-      str_detect(BloodType, "B_Percent") ~ "B-",
-      str_detect(BloodType, "AB_rh_Percent") ~ "AB+",
-      str_detect(BloodType, "AB_Percent") ~ "AB-",
-      str_detect(BloodType, "O_rh_Percent") ~ "O+",
-      str_detect(BloodType, "O_Percent") ~ "O-",
-      TRUE ~ BloodType
-    ),
-    # Extract base blood type (A, B, AB, O) for aggregation option
-    BaseBloodType = str_replace(BloodType, "[+-]", "")
-  )
 
