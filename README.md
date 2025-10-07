@@ -17,7 +17,8 @@ Analysis of Variance on the Blood Types from several states in Mexico
 # Readme guide for a Data Analysis Project (EXAMPLE)
 
 ## Background and Overview
-
+ 
+ - be sure to link the executive summary for those who do not care the first two parts 
  - Here I can address what I am doing an why
  - mention previous research
  - explain the project 
