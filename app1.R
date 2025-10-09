@@ -8,7 +8,8 @@ ui <- fluidPage(
     sidebarPanel(
       checkboxGroupInput("region", "Select Region(s):", 
                          choices = unique(df_long$Region), 
-                         selected = unique(df_long$Region)),
+                         selected = unique(df_long$Region)[1:6]
+                         ),
       
       radioButtons("bloodTypeView", "Blood Type Display:",
                    choices = c("Rh specified" = "specific",
@@ -33,7 +34,7 @@ ui <- fluidPage(
                    choices = c("Alphabetical", "Total Sample Size"), 
                    selected = "Alphabetical"),
       
-      checkboxInput("showPie", "Show Pie Charts", value = TRUE)
+ #     checkboxInput("showPie", "Show Pie Charts", value = TRUE)
     ),
     
     mainPanel(
